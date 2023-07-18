@@ -28,28 +28,29 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     public ReservaDTO obtenerReserva(Integer id) {
-        ReservasEntity reservasEntity = reservaRepository.findById(id).get();
+        ReservasEntity reservasEntity = reservaRepository.findById(id)
+                .orElseThrow(()-> new BadRequestException("No se encontró una reserva con ID: "+id));
         return modelMapper.map(reservasEntity, ReservaDTO.class);
     }
 
     @Override
     public boolean eliminarReserva(Integer id) {
-        ReservasEntity reservasEntity = reservaRepository.findById(id).orElse(null);
+        ReservasEntity reservasEntity = reservaRepository.findById(id)
+                        .orElseThrow(()-> new BadRequestException("No se encontró una reserva con ID: "+id));
         reservaRepository.delete(reservasEntity);
         return true;
     }
 
     @Override
     public ReservaDTO actualizarReserva(ReservaDTO reservaDTO) {
-        ReservasEntity reservasEntity = reservaRepository.findById(reservaDTO.getId()).orElse(null);
-        if (reservasEntity != null) {
-            reservasEntity.setFechaInicio(reservaDTO.getFechaInicio());
-            reservasEntity.setFechaFin(reservaDTO.getFechaFin());
-            reservasEntity = reservaRepository.save(reservasEntity);
-            return modelMapper.map(reservasEntity, ReservaDTO.class);
-        } else {
-            throw new BadRequestException("No se ha encontrado una reserva en la fecha" + reservaDTO.getFechaInicio());
-        }
+        return reservaRepository.findById(reservaDTO.getId())
+                .map(reservasEntity -> {
+                    reservasEntity.setFechaInicio(reservaDTO.getFechaInicio());
+                    reservasEntity.setFechaFin(reservaDTO.getFechaFin());
+                    reservasEntity = reservaRepository.save(reservasEntity);
+                    return modelMapper.map(reservasEntity, ReservaDTO.class);
+                })
+                .orElseThrow(()-> new BadRequestException("No se encontró una reserva con ID:"+reservaDTO.getId()));
     }
 }
 

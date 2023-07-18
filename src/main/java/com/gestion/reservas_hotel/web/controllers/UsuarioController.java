@@ -17,16 +17,16 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping("crearUsuario")
-    public ResponseEntity<UsuarioDTO> crearHotel(@RequestBody UsuarioDTO usuarioDTO){
+    public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO usuarioDTO){
         return new ResponseEntity<>(usuarioService.crearUsuario(usuarioDTO), HttpStatus.CREATED);
     }
     @GetMapping("obtenerUsuario")
-    public ResponseEntity<UsuarioDTO> obtenerHotel(@RequestParam String numeroDocumentoUsuario){
+    public ResponseEntity<UsuarioDTO> obtenerUsuario(@RequestParam Integer numeroDocumentoUsuario){
         return new ResponseEntity<>(usuarioService.obtenerUsuario(numeroDocumentoUsuario), HttpStatus.FOUND);
     }
 
     @DeleteMapping("eliminarUsuario")
-    public boolean eliminarUsuario(@RequestParam String numeroDocumentoUsuario) {
+    public boolean eliminarUsuario(@RequestParam Integer numeroDocumentoUsuario) {
         return usuarioService.eliminarUsuario(numeroDocumentoUsuario);
     }
     @PutMapping("actualizarUsuario")

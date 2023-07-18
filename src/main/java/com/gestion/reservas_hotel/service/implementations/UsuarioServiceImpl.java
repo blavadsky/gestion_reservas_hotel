@@ -29,14 +29,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioDTO obtenerUsuario(String numeroDocumentoUsuario) {
-            UsuarioEntity usuarioEntity = usuarioRepository.findById(Integer.valueOf(numeroDocumentoUsuario)).get();
+    public UsuarioDTO obtenerUsuario(Integer numeroDocumentoUsuario) {
+            UsuarioEntity usuarioEntity = usuarioRepository.findById(numeroDocumentoUsuario).get();
         return modelMapper.map(usuarioEntity, UsuarioDTO.class);
     }
 
     @Override
-    public boolean eliminarUsuario(String numeroDocumentoUsuario) {
-        UsuarioEntity usuarioEntity = usuarioRepository.findById(Integer.valueOf(numeroDocumentoUsuario)).orElse(null);
+    public boolean eliminarUsuario(Integer numeroDocumentoUsuario) {
+        UsuarioEntity usuarioEntity = usuarioRepository.findById(numeroDocumentoUsuario).orElse(null);
         usuarioRepository.delete(usuarioEntity);
         return true;
     }
