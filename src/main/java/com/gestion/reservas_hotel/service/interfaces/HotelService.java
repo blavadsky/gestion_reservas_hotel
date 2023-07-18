@@ -5,10 +5,10 @@ import jakarta.transaction.Transactional;
 
 public interface HotelService {
     @Transactional
-    HotelDTO createHotel(HotelDTO libroDTO);
+    HotelDTO createHotel(HotelDTO hotelDTO);
 
-    HotelDTO getHotel(Integer id);
-    boolean deleteHotel(Integer id);
-    HotelDTO updateHotel(HotelDTO libroDTO);
+    HotelDTO getHotel(Integer idHotel);
+    boolean deleteHotel(Integer idHotel);
+    HotelDTO updateHotel(HotelDTO hotelDTO);
 
 }

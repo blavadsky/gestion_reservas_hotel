@@ -16,13 +16,34 @@ public class HotelController {
     private HotelService hotelService;
 
     @PostMapping("crearHotel")
-    public ResponseEntity<HotelDTO> crearLibro(@RequestBody HotelDTO hotelDTO){
+    public ResponseEntity<HotelDTO> crearHotel(@RequestBody HotelDTO hotelDTO){
         return new ResponseEntity<>(hotelService.createHotel(hotelDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("obtenerHotel")
-    public ResponseEntity<HotelDTO> obtenerLibro(@RequestParam Integer id){
+    public ResponseEntity<HotelDTO> obtenerHotel(@RequestParam Integer id){
         return new ResponseEntity<>(hotelService.getHotel(id), HttpStatus.FOUND);
     }
 
+    @DeleteMapping("eliminarHotel")
+    public boolean eliminarHotel(@RequestParam Integer id) {
+        return hotelService.deleteHotel(id);
+    }
+
+    @PutMapping("actualizarHotel")
+    public ResponseEntity<HotelDTO> actualizarHotel(@RequestBody HotelDTO hotelDTO) {
+        return new ResponseEntity<>(hotelService.updateHotel(hotelDTO), HttpStatus.OK);
+    }
 }
+
+/*
+
+    @DeleteMapping("eliminarLibro")
+    public boolean eliminarLibro(@RequestParam Integer id) {
+        return libroService.deleteBook(id);
+    }
+
+    @PutMapping("actualizarLibro")
+    public LibroDTO actualizarLibro(@RequestBody LibroDTO libroDTO) {
+        return libroService.updateBook(libroDTO);
+    }*/
