@@ -15,6 +15,6 @@ import org.springframework.stereotype.Component;
 public class UsuarioDTO {
     private String nombreUsuario;
     private String telefonoUsuario;
-    private String numeroDocumentoUsuario;
+    private Integer numeroDocumentoUsuario;
     private TipoDocumento tipoDocumento;
 }

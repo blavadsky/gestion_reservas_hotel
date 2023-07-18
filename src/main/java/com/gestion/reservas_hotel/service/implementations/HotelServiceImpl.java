@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class HotelServiceImpl implements HotelService {
     @Autowired
@@ -20,37 +22,44 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public HotelDTO createHotel(HotelDTO hotelDTO) {
-        HotelEntity hotelEntity = modelMapper.map(hotelDTO, HotelEntity.class);
-        hotelEntity = hotelRepository.save(hotelEntity);
-        return modelMapper.map(hotelEntity, HotelDTO.class);
+        String nombreHotel = hotelDTO.getNombreHotel();
+        boolean existeHotel = hotelRepository.findAll().stream()
+                .anyMatch(hotel -> hotel.getNombreHotel().equalsIgnoreCase(nombreHotel));
+        if (existeHotel == false) {
+            HotelEntity hotelEntity = modelMapper.map(hotelDTO, HotelEntity.class);
+            hotelEntity = hotelRepository.save(hotelEntity);
+            return modelMapper.map(hotelEntity, HotelDTO.class);
+        } else {
+            throw new BadRequestException("Ya existe un hotel con el nombre "+ hotelDTO.getNombreHotel());}
     }
 
     @Override
     public HotelDTO getHotel(Integer id) {
-        HotelEntity hotelEntity = hotelRepository.findById(id).get();
+        HotelEntity hotelEntity = hotelRepository.findById(id)
+                .orElseThrow(()-> new BadRequestException("No se encontró un hotel con el ID: " + id));
         return modelMapper.map(hotelEntity, HotelDTO.class);
     }
 
     @Override
     public boolean deleteHotel(Integer id) {
-        HotelEntity hotelEntity = hotelRepository.findById(id).orElse(null);
+        HotelEntity hotelEntity = hotelRepository.findById(id)
+                .orElseThrow(()-> new BadRequestException("No se encontró un hotel con el ID: "+ id));
         hotelRepository.delete(hotelEntity);
         return true;
     }
 
     @Override
     public HotelDTO updateHotel(HotelDTO hotelDTO) {
-        HotelEntity hotelEntity = hotelRepository.findById(hotelDTO.getIdHotel()).orElse(null);
-        if (hotelEntity != null) {
-            hotelEntity.setNombreHotel(hotelDTO.getNombreHotel());
-            hotelEntity.setTelefonoHotel(hotelDTO.getTelefonoHotel());
-            hotelEntity.setDireccionCorreoHotel(hotelDTO.getDireccionCorreoHotel());
-            hotelEntity.setNumeroHabitacionesHotel(hotelDTO.getNumeroHabitacionesHotel());
-            hotelEntity = hotelRepository.save(hotelEntity);
-            return modelMapper.map(hotelEntity, HotelDTO.class);
-        } else {
-            throw new BadRequestException("No se ha encontrado un hotel con id" + hotelDTO.getIdHotel());
-        }
+        return hotelRepository.findById(hotelDTO.getIdHotel())
+                .map(hotelEntity -> {
+                    hotelEntity.setNombreHotel(hotelDTO.getNombreHotel());
+                    hotelEntity.setTelefonoHotel(hotelDTO.getTelefonoHotel());
+                    hotelEntity.setDireccionCorreoHotel(hotelDTO.getDireccionCorreoHotel());
+                    hotelEntity.setNumeroHabitacionesHotel(hotelDTO.getNumeroHabitacionesHotel());
+                    hotelEntity = hotelRepository.save(hotelEntity);
+                    return modelMapper.map(hotelEntity, HotelDTO.class);
+                })
+                .orElseThrow(() -> new BadRequestException("No se ha encontrado un hotel con id " + hotelDTO.getIdHotel()));
     }
 
 }

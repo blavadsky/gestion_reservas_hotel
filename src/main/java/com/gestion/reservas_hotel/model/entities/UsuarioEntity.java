@@ -15,7 +15,7 @@ import lombok.*;
 public class UsuarioEntity {
 
     @Id
-    private String numeroDocumentoUsuario;
+    private Integer numeroDocumentoUsuario;
 
     @Column(name = "nombre_usuario")
     private String nombreUsuario;
