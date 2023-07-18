@@ -19,25 +19,39 @@ public class HotelServiceImpl implements HotelService {
     private ModelMapper modelMapper;
 
     @Override
-    public HotelDTO createHotel(HotelDTO libroDTO) {
-        HotelEntity libroEntity = modelMapper.map(libroDTO, HotelEntity.class);
-        libroEntity = hotelRepository.save(libroEntity);
-        return modelMapper.map(libroEntity, HotelDTO.class);
+    public HotelDTO createHotel(HotelDTO hotelDTO) {
+        HotelEntity hotelEntity = modelMapper.map(hotelDTO, HotelEntity.class);
+        hotelEntity = hotelRepository.save(hotelEntity);
+        return modelMapper.map(hotelEntity, HotelDTO.class);
     }
 
     @Override
     public HotelDTO getHotel(Integer id) {
-        HotelEntity bookEntity = hotelRepository.findById(id).get();
-        return modelMapper.map(bookEntity, HotelDTO.class);
+        HotelEntity hotelEntity = hotelRepository.findById(id).get();
+        return modelMapper.map(hotelEntity, HotelDTO.class);
     }
 
     @Override
     public boolean deleteHotel(Integer id) {
-        return false;
+        HotelEntity hotelEntity = hotelRepository.findById(id).orElse(null);
+        hotelRepository.delete(hotelEntity);
+        return true;
     }
 
     @Override
-    public HotelDTO updateHotel(HotelDTO libroDTO) {
-        return null;
+    public HotelDTO updateHotel(HotelDTO hotelDTO) {
+        HotelEntity hotelEntity = hotelRepository.findById(hotelDTO.getIdHotel()).orElse(null);
+        if (hotelEntity != null) {
+            hotelEntity.setNombreHotel(hotelDTO.getNombreHotel());
+            hotelEntity.setTelefonoHotel(hotelDTO.getTelefonoHotel());
+            hotelEntity.setDireccionCorreoHotel(hotelDTO.getDireccionCorreoHotel());
+            hotelEntity.setNumeroHabitacionesHotel(hotelDTO.getNumeroHabitacionesHotel());
+            hotelEntity = hotelRepository.save(hotelEntity);
+            return modelMapper.map(hotelEntity, HotelDTO.class);
+        } else {
+            throw new BadRequestException("No se ha encontrado un hotel con id" + hotelDTO.getIdHotel());
+        }
     }
+
 }
+

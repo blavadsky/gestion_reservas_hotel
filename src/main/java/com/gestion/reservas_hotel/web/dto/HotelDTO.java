@@ -1,6 +1,7 @@
 package com.gestion.reservas_hotel.web.dto;
 
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Date;
@@ -11,11 +12,11 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
+@Component
 public class HotelDTO {
+    private Integer idHotel;
     private String nombreHotel;
-    private Date capacidadReservas;
-    private String telefono;
-    private String direccionCorreo;
-    private Integer numeroHabitaciones;
-
+    private String telefonoHotel;
+    private String direccionCorreoHotel;
+    private Integer numeroHabitacionesHotel;
 }
