@@ -1,11 +1,8 @@
 package com.gestion.reservas_hotel.service.implementations;
 
-import com.gestion.reservas_hotel.model.entities.HotelEntity;
 import com.gestion.reservas_hotel.model.entities.UsuarioEntity;
-import com.gestion.reservas_hotel.model.repositoy.HotelRepository;
 import com.gestion.reservas_hotel.model.repositoy.UsuarioRepository;
 import com.gestion.reservas_hotel.service.interfaces.UsuarioService;
-import com.gestion.reservas_hotel.web.dto.HotelDTO;
 import com.gestion.reservas_hotel.web.dto.UsuarioDTO;
 import com.gestion.reservas_hotel.web.exception.BadRequestException;
 import org.modelmapper.ModelMapper;
@@ -23,33 +20,40 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) {
-        UsuarioEntity usuarioEntity = modelMapper.map(usuarioDTO, UsuarioEntity.class);
-        usuarioEntity = usuarioRepository.save(usuarioEntity);
-        return modelMapper.map(usuarioEntity, UsuarioDTO.class);
+        boolean existeUsuario = usuarioRepository.findAll().stream()
+                .anyMatch(usuario -> usuario.getNumeroDocumentoUsuario().equals(usuarioDTO.getNumeroDocumentoUsuario()));
+        if (existeUsuario == false) {
+            UsuarioEntity usuarioEntity = modelMapper.map(usuarioDTO, UsuarioEntity.class);
+            usuarioEntity = usuarioRepository.save(usuarioEntity);
+            return modelMapper.map(usuarioEntity, UsuarioDTO.class);
+        } { throw new BadRequestException("Ya existe un usuario registrado con el documento: "
+                +usuarioDTO.getNumeroDocumentoUsuario());}
+
     }
 
     @Override
     public UsuarioDTO obtenerUsuario(Integer numeroDocumentoUsuario) {
-            UsuarioEntity usuarioEntity = usuarioRepository.findById(numeroDocumentoUsuario).get();
+            UsuarioEntity usuarioEntity = usuarioRepository.findById(numeroDocumentoUsuario)
+                .orElseThrow(() -> new BadRequestException("No se encontró un usuario con documento: "+numeroDocumentoUsuario));
         return modelMapper.map(usuarioEntity, UsuarioDTO.class);
     }
 
     @Override
     public boolean eliminarUsuario(Integer numeroDocumentoUsuario) {
-        UsuarioEntity usuarioEntity = usuarioRepository.findById(numeroDocumentoUsuario).orElse(null);
+        UsuarioEntity usuarioEntity = usuarioRepository.findById(numeroDocumentoUsuario)
+            .orElseThrow(()-> new BadRequestException("No se encontró un usuario con documento: "+numeroDocumentoUsuario));
         usuarioRepository.delete(usuarioEntity);
         return true;
     }
 
     @Override
     public UsuarioDTO actualizarUsuario(UsuarioDTO usuarioDTO) {
-        UsuarioEntity usuarioEntity = usuarioRepository.findById(Integer.valueOf(usuarioDTO.getNumeroDocumentoUsuario())).orElse(null);
-        if (usuarioEntity != null) {
-            usuarioEntity.setTelefonoUsuario(usuarioDTO.getTelefonoUsuario());
-            usuarioEntity = usuarioRepository.save(usuarioEntity);
-            return modelMapper.map(usuarioEntity, UsuarioDTO.class);
-        } else {
-            throw new BadRequestException("No se encuentra un usuario con el documento: " + usuarioDTO.getNumeroDocumentoUsuario());
-        }
+        return usuarioRepository.findById(usuarioDTO.getNumeroDocumentoUsuario())
+                .map(usuarioEntity -> {
+                    usuarioEntity.setTelefonoUsuario(usuarioDTO.getTelefonoUsuario());
+                    usuarioEntity = usuarioRepository.save(usuarioEntity);
+                    return modelMapper.map(usuarioEntity, UsuarioDTO.class);
+                }).orElseThrow(()->
+                        new BadRequestException("No se encontró un usuario con documento: " + usuarioDTO.getNumeroDocumentoUsuario()));
     }
 }
