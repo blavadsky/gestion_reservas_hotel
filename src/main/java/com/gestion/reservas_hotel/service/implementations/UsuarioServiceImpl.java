@@ -28,7 +28,6 @@ public class UsuarioServiceImpl implements UsuarioService {
             return modelMapper.map(usuarioEntity, UsuarioDTO.class);
         } { throw new BadRequestException("Ya existe un usuario registrado con el documento: "
                 +usuarioDTO.getNumeroDocumentoUsuario());}
-
     }
 
     @Override
@@ -54,6 +53,6 @@ public class UsuarioServiceImpl implements UsuarioService {
                     usuarioEntity = usuarioRepository.save(usuarioEntity);
                     return modelMapper.map(usuarioEntity, UsuarioDTO.class);
                 }).orElseThrow(()->
-                        new BadRequestException("No se encontró un usuario con documento: " + usuarioDTO.getNumeroDocumentoUsuario()));
+                    new BadRequestException("No se encontró un usuario con documento: " + usuarioDTO.getNumeroDocumentoUsuario()));
     }
 }
