@@ -26,7 +26,7 @@ public class HotelEntity {
     @Column(name = "direccionCorreo_hotel")
     private String direccionCorreoHotel;
 
-    @Column(name = "numeroHabitaciones_hotel")
+    @Column(name = "numeroHabitaciones_disponibles  _hotel")
     private Integer numeroHabitacionesHotel;
 
     @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

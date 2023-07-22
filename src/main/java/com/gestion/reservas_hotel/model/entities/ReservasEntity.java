@@ -25,7 +25,7 @@ public class ReservasEntity {
     @Column(name = "fecha_fin_reserva")
     private Date fechaFin;
 
-    @Column(name = "capacidad_hotel")
+    @Column(name = "reservas_solicitadas")
     private Integer capacidadHotel;
 
     @ManyToOne(fetch = FetchType.LAZY)

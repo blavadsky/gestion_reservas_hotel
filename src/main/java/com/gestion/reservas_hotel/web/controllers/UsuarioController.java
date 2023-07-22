@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("apiUsuarios/v1")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
@@ -24,7 +25,6 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> obtenerUsuario(@RequestParam Integer numeroDocumentoUsuario){
         return new ResponseEntity<>(usuarioService.obtenerUsuario(numeroDocumentoUsuario), HttpStatus.FOUND);
     }
-
     @DeleteMapping("eliminarUsuario")
     public boolean eliminarUsuario(@RequestParam Integer numeroDocumentoUsuario) {
         return usuarioService.eliminarUsuario(numeroDocumentoUsuario);
