@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 public class UsuarioDTO {
-    private String nombreUsuario;
     private String nombre;
     private String apellidos;
     private String telefonoUsuario;

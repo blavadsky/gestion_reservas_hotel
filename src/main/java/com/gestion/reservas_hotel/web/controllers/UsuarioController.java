@@ -34,4 +34,6 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.actualizarUsuario(usuarioDTO), HttpStatus.OK);
     }
 
+
+
 }

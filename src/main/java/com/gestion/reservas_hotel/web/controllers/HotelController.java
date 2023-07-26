@@ -8,9 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("apiHoteles/v1")
 @AllArgsConstructor
+@CrossOrigin("*")
 public class HotelController {
     @Autowired
     private HotelService hotelService;
@@ -34,16 +37,11 @@ public class HotelController {
     public ResponseEntity<HotelDTO> actualizarHotel(@RequestBody HotelDTO hotelDTO) {
         return new ResponseEntity<>(hotelService.updateHotel(hotelDTO), HttpStatus.OK);
     }
-}
 
-/*
-
-    @DeleteMapping("eliminarLibro")
-    public boolean eliminarLibro(@RequestParam Integer id) {
-        return libroService.deleteBook(id);
+    @GetMapping("listarHoteles")
+    public List<HotelDTO> listarHoteles() {
+        return hotelService.listarHoteles();
     }
 
-    @PutMapping("actualizarLibro")
-    public LibroDTO actualizarLibro(@RequestBody LibroDTO libroDTO) {
-        return libroService.updateBook(libroDTO);
-    }*/
+}
+
