@@ -1,22 +1,45 @@
 package com.gestion.reservas_hotel.service.implementations;
 
+import com.gestion.reservas_hotel.model.UsuarioRol;
 import com.gestion.reservas_hotel.model.entities.UsuarioEntity;
+import com.gestion.reservas_hotel.model.entities.UsuarioRolEntity;
+import com.gestion.reservas_hotel.model.repositoy.RolRepository;
 import com.gestion.reservas_hotel.model.repositoy.UsuarioRepository;
 import com.gestion.reservas_hotel.service.interfaces.UsuarioService;
 import com.gestion.reservas_hotel.web.dto.UsuarioDTO;
 import com.gestion.reservas_hotel.web.exception.BadRequestException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+@RequiredArgsConstructor
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
+
+    private final UsuarioRepository usuarioRepository;
+
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private RolRepository rolRepository;
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Override
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) {
+                return usuarioRepository.findByEmail(username)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            }
+        };
+    }
 
     @Override
     public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) {
@@ -28,6 +51,24 @@ public class UsuarioServiceImpl implements UsuarioService {
             return modelMapper.map(usuarioEntity, UsuarioDTO.class);
         } { throw new BadRequestException("Ya existe un usuario registrado con el documento: "
                 +usuarioDTO.getNumeroDocumentoUsuario());}
+    }
+
+
+    @Override
+    public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO, Set<UsuarioRolEntity> usuarioRoles) throws Exception {
+//        UsuarioDTO usuarioDTO1 = usuarioRepository.findByNombreUsuario(usuarioDTO.getNombreUsuario());
+//        if(usuarioDTO1 != null) {
+//            System.out.println("Ya existe");
+//            throw new BadRequestException("Ya existe el user");
+//        }
+//        else {
+//            for(UsuarioRolEntity usuarioRol: usuarioRoles) {
+//                rolRepository.save(usuarioRol.getRol());
+//            }
+//            usuarioDTO.getUsuarioRoles().addAll(usuarioRoles);
+
+//        }
+        return null;
     }
 
     @Override

@@ -10,6 +10,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class HotelServiceImpl implements HotelService {
@@ -59,6 +62,14 @@ public class HotelServiceImpl implements HotelService {
                     return modelMapper.map(hotelEntity, HotelDTO.class);
                 })
                 .orElseThrow(() -> new BadRequestException("No se ha encontrado un hotel con id " + hotelDTO.getIdHotel()));
+    }
+
+    @Override
+    public List<HotelDTO> listarHoteles() {
+        List<HotelEntity> hoteles = hotelRepository.findAll();
+        return hoteles.stream()
+                .map(hotelEntity -> modelMapper.map(hotelEntity, HotelDTO.class))
+                .collect(Collectors.toList());
     }
 
 }
