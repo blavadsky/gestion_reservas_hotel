@@ -18,6 +18,7 @@ import reactor.core.publisher.*;
 @RestController
 @RequestMapping("apiReservas/v1")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200/")
 public class ReservaController {
     @Autowired
     private ReservaService reservaService;

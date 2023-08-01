@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SigninRequest {
-    private String email;
-    private String password;
+    private String correoElectronico;
+    private String contrasena;
 }

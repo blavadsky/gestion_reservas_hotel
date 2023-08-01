@@ -5,6 +5,7 @@ import com.gestion.reservas_hotel.model.TipoDocumento;
 import com.gestion.reservas_hotel.model.UsuarioRol;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +24,8 @@ import java.util.Set;
 public class UsuarioEntity implements UserDetails {
 
     @Id
-    @Column(name = "numero_documento_usuario")
-    private Integer numeroDocumentoUsuario;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(name = "nombre")
     private String nombre;
@@ -36,7 +37,10 @@ public class UsuarioEntity implements UserDetails {
     private String contrasena;
 
     @Column(name = "telefono_usuario")
-    private String telefonoUsuario;
+    private String telefono;
+
+    @Column(name = "numero_documento")
+    private Integer numeroDocumento;
 
     @Column(name = "tipo_documento")
     private TipoDocumento tipoDocumento;
@@ -47,22 +51,14 @@ public class UsuarioEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UsuarioRol rol;
 
-    @Override
+        @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(rol.name()));
     }
-//    @Column(name="usuario_rol")
-//    private UsuarioRol usuarioRol;
-
-//    private String perfil;
-//    private boolean enabled = true;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuario")
-    private Set<UsuarioRolEntity> usuarioRoles = new HashSet<>();
 
     @Override
     public String getPassword() {
-        return null;
+        return contrasena;
     }
 
     @Override
@@ -90,9 +86,6 @@ public class UsuarioEntity implements UserDetails {
         return true;
     }
 
-//
-//    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL)
-//    private AccesoUsuariosEntity accesoUsuario;
-
-
 }
+
+

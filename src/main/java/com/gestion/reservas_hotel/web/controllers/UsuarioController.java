@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("apiUsuarios/v1")
 @AllArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
@@ -21,13 +21,18 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO usuarioDTO){
         return new ResponseEntity<>(usuarioService.crearUsuario(usuarioDTO), HttpStatus.CREATED);
     }
+
     @GetMapping("obtenerUsuario")
-    public ResponseEntity<UsuarioDTO> obtenerUsuario(@RequestParam Integer numeroDocumentoUsuario){
-        return new ResponseEntity<>(usuarioService.obtenerUsuario(numeroDocumentoUsuario), HttpStatus.FOUND);
+    public ResponseEntity<UsuarioDTO> obtenerUsuario(@RequestParam String correoElectronico){
+        return new ResponseEntity<>(usuarioService.obtenerUsuario(correoElectronico), HttpStatus.FOUND);
+    }
+    @GetMapping("obtenerUsuarioDocumento")
+    public ResponseEntity<UsuarioDTO> obtenerUsuario(@RequestParam Integer numeroDocumento){
+        return new ResponseEntity<>(usuarioService.obtenerUsuario(numeroDocumento), HttpStatus.FOUND);
     }
     @DeleteMapping("eliminarUsuario")
-    public boolean eliminarUsuario(@RequestParam Integer numeroDocumentoUsuario) {
-        return usuarioService.eliminarUsuario(numeroDocumentoUsuario);
+    public boolean eliminarUsuario(@RequestParam Integer numeroDocumento) {
+        return usuarioService.eliminarUsuario(numeroDocumento);
     }
     @PutMapping("actualizarUsuario")
     public ResponseEntity<UsuarioDTO> actualizarUsuario(@RequestBody UsuarioDTO usuarioDTO) {

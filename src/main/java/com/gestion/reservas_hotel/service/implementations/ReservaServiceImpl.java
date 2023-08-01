@@ -26,7 +26,6 @@ public class ReservaServiceImpl implements ReservaService {
     public ReservaDTO crearReserva(Integer hotelId, ReservaDTO reservaDTO) {
         HotelEntity hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new BadRequestException("No se encontró un hotel con el ID: " + hotelId));
-
         if (reservaDTO.getCapacidadHotel() <= hotel.getNumeroHabitacionesHotel()) {
             ReservasEntity reserva = modelMapper.map(reservaDTO, ReservasEntity.class);
             reserva = reservaRepository.save(reserva);
