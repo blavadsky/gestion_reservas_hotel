@@ -35,8 +35,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/generarTokenAdmin")
-    public ResponseEntity<JwtAuthenticationResponse> generarTokenSiEsAdmin(@RequestParam SignUpRequest request) {
-        return ResponseEntity.ok(authenticationService.generarTokenSiEsAdmin(request.getCorreoElectronico()));
+    public ResponseEntity<JwtAuthenticationResponse> generarTokenSiEsAdmin(@RequestBody IsAdminRequest request) {
+        return ResponseEntity.ok(authenticationService.generarTokenSiEsAdmin(request));
     }
 
 }

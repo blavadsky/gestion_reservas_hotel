@@ -41,8 +41,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/signin/**").permitAll()
-                        .requestMatchers("/api/v1/generarTokenAdmin/**").permitAll()
+//                        .requestMatchers("/api/v1/signin/**").permitAll()
+//                        .requestMatchers("/api/v1/generarTokenAdmin/**").permitAll()
                         .requestMatchers("/apiHoteles/v1/crearHotel").hasRole("ADMIN")
                          .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
