@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 public class UsuarioDTO {
     private String nombre;
     private String apellidos;
-    private String telefonoUsuario;
+    private String telefono;
     private String correoElectronico;
-    private Integer numeroDocumentoUsuario;
+    private Integer numeroDocumento;
     private TipoDocumento tipoDocumento;
-
+    private String contrasena;
     @Builder.Default
     private UsuarioRol usuarioRol = UsuarioRol.NORMAL;
 }

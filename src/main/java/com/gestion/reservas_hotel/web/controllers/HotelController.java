@@ -13,14 +13,19 @@ import java.util.List;
 @RestController
 @RequestMapping("apiHoteles/v1")
 @AllArgsConstructor
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class HotelController {
     @Autowired
     private HotelService hotelService;
 
+//    @PostMapping("crearHotel")
+//    public ResponseEntity<HotelDTO> crearHotel(@RequestBody HotelDTO hotelDTO){
+//        return new ResponseEntity<>(hotelService.createHotel(hotelDTO), HttpStatus.CREATED);
+//    }
+
     @PostMapping("crearHotel")
-    public ResponseEntity<HotelDTO> crearHotel(@RequestBody HotelDTO hotelDTO){
-        return new ResponseEntity<>(hotelService.createHotel(hotelDTO), HttpStatus.CREATED);
+    public ResponseEntity<HotelDTO> crearHotel(@RequestBody HotelDTO hotelDTO) {
+        return ResponseEntity.ok(hotelService.createHotel(hotelDTO));
     }
 
     @GetMapping("obtenerHotel")
