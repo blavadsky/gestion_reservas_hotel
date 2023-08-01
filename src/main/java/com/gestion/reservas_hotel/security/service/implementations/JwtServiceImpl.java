@@ -3,7 +3,6 @@ package com.gestion.reservas_hotel.security.service.implementations;
 import com.gestion.reservas_hotel.model.UsuarioRol;
 import com.gestion.reservas_hotel.model.entities.UsuarioEntity;
 import com.gestion.reservas_hotel.model.repositoy.UsuarioRepository;
-import com.gestion.reservas_hotel.security.dao.request.SignUpRequest;
 import com.gestion.reservas_hotel.security.service.interfaces.JwtService;
 import com.gestion.reservas_hotel.service.interfaces.UsuarioService;
 import com.gestion.reservas_hotel.web.dto.UsuarioDTO;
@@ -20,7 +19,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.*;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -51,6 +49,11 @@ public class JwtServiceImpl implements JwtService, UsuarioService {
     }
 
     @Override
+    public String generateToken(UserDetails userDetails, UsuarioRol usuarioRol) {
+        return generateToken(new HashMap<>(), userDetails, usuarioRol);
+    }
+
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -60,6 +63,18 @@ public class JwtServiceImpl implements JwtService, UsuarioService {
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
         return claimsResolvers.apply(claims);
+    }
+
+
+    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, UsuarioRol usuarioRol) {
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .claim("rol", usuarioRol) // Incluir el rol del usuario en el token
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(SignatureAlgorithm.HS256, getSigningKey())
+                .compact();
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {

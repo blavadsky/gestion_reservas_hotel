@@ -1,5 +1,6 @@
 package com.gestion.reservas_hotel.web.controllers;
 
+import com.gestion.reservas_hotel.security.dao.response.JwtAuthenticationResponse;
 import com.gestion.reservas_hotel.service.interfaces.HotelService;
 import com.gestion.reservas_hotel.web.dto.HotelDTO;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class HotelController {
 //    }
 
     @PostMapping("crearHotel")
-    public ResponseEntity<HotelDTO> crearHotel(@RequestBody HotelDTO hotelDTO) {
+    public ResponseEntity<JwtAuthenticationResponse> crearHotel(@RequestBody HotelDTO hotelDTO) {
         return ResponseEntity.ok(hotelService.createHotel(hotelDTO));
     }
 
