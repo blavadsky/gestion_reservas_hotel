@@ -14,6 +14,7 @@ import java.util.*;
 @Table(name="hotel")
 public class HotelEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer idHotel;
 
     @Column(name = "nombre_hotel")
@@ -28,7 +29,7 @@ public class HotelEntity {
     @Column(name = "numeroHabitaciones_disponibles  _hotel")
     private Integer numeroHabitacionesHotel;
 
-//    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<ReservasEntity> reservas = new ArrayList<>();
+    @OneToMany(mappedBy = "hotel", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReservasEntity> reservas = new ArrayList<>();
 
 }

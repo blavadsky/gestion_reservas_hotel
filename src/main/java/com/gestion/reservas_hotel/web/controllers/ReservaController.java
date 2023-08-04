@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("apiReservas/v1")
@@ -42,4 +44,11 @@ public class ReservaController {
     public ResponseEntity<ReservaDTO> actualizarReserva(@RequestBody ReservaDTO reservaDTO) {
         return new ResponseEntity<>(reservaService.actualizarReserva(reservaDTO), HttpStatus.OK);
     }
+
+    @GetMapping("listarReservas")
+    public List<ReservaDTO> listarHoteles() {
+        return reservaService.listarReservas();
+    }
+
+
 }
