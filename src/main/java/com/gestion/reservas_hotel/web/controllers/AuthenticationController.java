@@ -39,10 +39,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.signin(request));
     }
 
-    @PostMapping("/generarTokenAdmin")
-    public ResponseEntity<JwtAuthenticationResponse> generarTokenSiEsAdmin(@RequestBody IsAdminRequest request) {
-        return ResponseEntity.ok(authenticationService.generarTokenSiEsAdmin(request));
-    }
 
     @GetMapping("/listarReservas")
     public List<ReservasEntity> listarReservas(@RequestParam Integer id) {

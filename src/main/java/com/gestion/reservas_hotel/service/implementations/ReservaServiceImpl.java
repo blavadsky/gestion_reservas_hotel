@@ -17,7 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,17 +57,21 @@ public class ReservaServiceImpl implements ReservaService {
     }
 
 
-    public List<ReservasEntity> obtenerReservasPorUsuario(String correoElectronico) {
+    public List<ReservaDTO> obtenerReservasPorUsuario(String correoElectronico) {
         Optional<UsuarioEntity> usuario = usuarioRepository.findByCorreoElectronico(correoElectronico);
-        return usuario.get().getReservas();
+
+        if (usuario.isPresent()) {
+            List<ReservasEntity> reservas = usuario.get().getReservas();
+            return reservas.stream()
+                    .map(reservasEntity -> modelMapper.map(reservasEntity, ReservaDTO.class))
+                    .collect(Collectors.toList());
+        } throw new BadRequestException("No se encontró un usuario con correo: " + correoElectronico);
     }
 
     @Override
     public ReservaDTO crearReserva(Integer hotelId, ReservaDTO reservaDTO) {
         HotelEntity hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new BadRequestException("No se encontró un hotel con el ID: " + hotelId));
-//        UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
-//                .orElseThrow(() -> new BadRequestException("No se encontró un usuario con el ID: " + usuarioId));
 
         List<ReservasEntity> reservasExistenteEnHotel = reservaRepository
                 .findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqualAndHotel(

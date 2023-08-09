@@ -18,11 +18,6 @@ public class HotelController {
     @Autowired
     private HotelService hotelService;
 
-//    @PostMapping("crearHotel")
-//    public ResponseEntity<HotelDTO> crearHotel(@RequestBody HotelDTO hotelDTO){
-//        return new ResponseEntity<>(hotelService.createHotel(hotelDTO), HttpStatus.CREATED);
-//    }
-
     @PostMapping("crearHotel")
     public ResponseEntity<HotelDTO> crearHotel(@RequestBody HotelDTO hotelDTO) {
         return ResponseEntity.ok(hotelService.createHotel(hotelDTO));
