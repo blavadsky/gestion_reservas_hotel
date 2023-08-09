@@ -2,6 +2,7 @@ package com.gestion.reservas_hotel.security.dao.request;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gestion.reservas_hotel.model.entities.HotelEntity;
 import lombok.*;
 
 import java.util.Date;
@@ -14,7 +15,7 @@ public class ReservaRequest {
 
     private long numeroHabitacionesRequeridas;
 
-    private Integer hotelId;
+    //private HotelEntity hotelId;
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date fechaInicio;

@@ -1,6 +1,7 @@
 package com.gestion.reservas_hotel.security.service.implementations;
 
 import com.gestion.reservas_hotel.model.UsuarioRol;
+import com.gestion.reservas_hotel.model.entities.ReservasEntity;
 import com.gestion.reservas_hotel.model.entities.UsuarioEntity;
 import com.gestion.reservas_hotel.model.repositoy.UsuarioRepository;
 import com.gestion.reservas_hotel.security.dao.request.SignUpRequest;
@@ -22,9 +23,7 @@ import io.jsonwebtoken.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
@@ -51,6 +50,12 @@ public class JwtServiceImpl implements JwtService, UsuarioService {
     }
 
     @Override
+    public String generateToken(UserDetails userDetails, UsuarioRol usuarioRol) {
+        return generateToken(new HashMap<>(), userDetails, usuarioRol);
+    }
+
+
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
@@ -64,6 +69,14 @@ public class JwtServiceImpl implements JwtService, UsuarioService {
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .signWith(SignatureAlgorithm.HS256, getSigningKey()).compact();
+    }
+
+    private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, UsuarioRol usuarioRol) {
+        return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
+                .claim("rol", usuarioRol)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(SignatureAlgorithm.HS256, getSigningKey()).compact();
@@ -99,7 +112,6 @@ public class JwtServiceImpl implements JwtService, UsuarioService {
         };
 
     }
-
 
     @Override
     public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) {

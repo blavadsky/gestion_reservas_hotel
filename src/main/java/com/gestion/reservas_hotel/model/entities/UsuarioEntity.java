@@ -1,6 +1,8 @@
 package com.gestion.reservas_hotel.model.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.gestion.reservas_hotel.model.TipoDocumento;
 import com.gestion.reservas_hotel.model.UsuarioRol;
 import jakarta.persistence.*;
@@ -13,6 +15,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 
 @Getter
 @Setter
@@ -50,6 +53,9 @@ public class UsuarioEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private UsuarioRol rol;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<ReservasEntity> reservas;
 
         @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

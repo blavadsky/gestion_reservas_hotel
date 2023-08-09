@@ -2,9 +2,12 @@ package com.gestion.reservas_hotel.service.implementations;
 
 import com.gestion.reservas_hotel.model.entities.HotelEntity;
 import com.gestion.reservas_hotel.model.entities.ReservasEntity;
+import com.gestion.reservas_hotel.model.entities.UsuarioEntity;
 import com.gestion.reservas_hotel.model.repositoy.HotelRepository;
 import com.gestion.reservas_hotel.model.repositoy.ReservaRepository;
 //import com.gestion.reservas_hotel.service.interfaces.HabitacionesService;
+import com.gestion.reservas_hotel.model.repositoy.UsuarioRepository;
+import com.gestion.reservas_hotel.security.dao.request.ReservaRequest;
 import com.gestion.reservas_hotel.service.interfaces.ReservaService;
 import com.gestion.reservas_hotel.web.dto.HotelDTO;
 import com.gestion.reservas_hotel.web.dto.ReservaDTO;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,16 +29,23 @@ public class ReservaServiceImpl implements ReservaService {
     private ReservaRepository reservaRepository;
 
     @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
     private HotelRepository hotelRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    //private final HabitacionesService habitacionesService;
 
 
-
-
+    @Override
+    public List<ReservaDTO> reservasGuardadasPorFecha(ReservaRequest reservaRequest) {
+        List<ReservasEntity> reservas = reservaRepository.findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual
+                (reservaRequest.getFechaInicio(), reservaRequest.getFechaFin());
+        return reservas.stream().map(reservasEntity -> modelMapper.map(reservasEntity, ReservaDTO.class))
+                .collect(Collectors.toList());
+    }
 
 
     @Override
@@ -46,10 +57,17 @@ public class ReservaServiceImpl implements ReservaService {
     }
 
 
+    public List<ReservasEntity> obtenerReservasPorUsuario(String correoElectronico) {
+        Optional<UsuarioEntity> usuario = usuarioRepository.findByCorreoElectronico(correoElectronico);
+        return usuario.get().getReservas();
+    }
+
     @Override
     public ReservaDTO crearReserva(Integer hotelId, ReservaDTO reservaDTO) {
         HotelEntity hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new BadRequestException("No se encontró un hotel con el ID: " + hotelId));
+//        UsuarioEntity usuario = usuarioRepository.findById(usuarioId)
+//                .orElseThrow(() -> new BadRequestException("No se encontró un usuario con el ID: " + usuarioId));
 
         List<ReservasEntity> reservasExistenteEnHotel = reservaRepository
                 .findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqualAndHotel(
@@ -60,6 +78,8 @@ public class ReservaServiceImpl implements ReservaService {
                 .sum()) - reservaDTO.getCapacidadHotel()) >= 0) {
             ReservasEntity reserva = modelMapper.map(reservaDTO, ReservasEntity.class);
             reserva.setHotel(hotel);
+            reserva.setUsuario(usuarioRepository.findByCorreoElectronico(reservaDTO.getUsuario()).orElseThrow(() ->
+                    new BadRequestException("No se encontró usuario con Correo: " + reservaDTO.getUsuario())));
             return modelMapper.map(reservaRepository.save(reserva), ReservaDTO.class);
         }
         throw new BadRequestException("No hay capacidad para la fecha seleccionada.");
@@ -91,5 +111,7 @@ public class ReservaServiceImpl implements ReservaService {
                 })
                 .orElseThrow(()-> new BadRequestException("No se encontró una reserva con ID:"+reservaDTO.getId()));
     }
+
+
 }
 

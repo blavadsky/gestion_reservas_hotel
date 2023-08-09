@@ -1,6 +1,9 @@
 package com.gestion.reservas_hotel.web.controllers;
 
 
+import com.gestion.reservas_hotel.model.entities.HotelEntity;
+import com.gestion.reservas_hotel.model.entities.ReservasEntity;
+import com.gestion.reservas_hotel.security.dao.request.ReservaRequest;
 import com.gestion.reservas_hotel.service.interfaces.HotelService;
 import com.gestion.reservas_hotel.service.interfaces.ReservaService;
 import com.gestion.reservas_hotel.web.dto.HotelDTO;
@@ -14,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.*;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -46,9 +50,19 @@ public class ReservaController {
     }
 
     @GetMapping("listarReservas")
-    public List<ReservaDTO> listarHoteles() {
+    public List<ReservaDTO> listarReservas() {
         return reservaService.listarReservas();
     }
 
+    @GetMapping("verificarDisponibilidad")
+    public List<ReservaDTO> verificarDisponibilidad(@RequestBody ReservaRequest reservaRequest)
+    {
+        return reservaService. reservasGuardadasPorFecha(reservaRequest);
+    }
+
+    @GetMapping("obtenerReservasPorUsuario")
+    public List<ReservasEntity> obtenerReservasPorUsuario(@RequestParam String correoElectronico) {
+        return reservaService.obtenerReservasPorUsuario(correoElectronico);
+    }
 
 }

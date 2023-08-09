@@ -11,4 +11,7 @@ public interface ReservaRepository extends JpaRepository<ReservasEntity,Integer>
     List<ReservasEntity> findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqualAndHotel
             (Date fechaInicio, Date fechaFin, HotelEntity hotelId);
 
+    List<ReservasEntity> findByFechaInicioLessThanEqualAndFechaFinGreaterThanEqual
+            (Date fechaInicio, Date fechaFin);
+
 }
