@@ -1,6 +1,8 @@
 package com.gestion.reservas_hotel.model.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.gestion.reservas_hotel.model.TipoDocumento;
 import com.gestion.reservas_hotel.model.UsuarioRol;
 import jakarta.persistence.*;
@@ -9,8 +11,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import java.util.*;
 
 @Getter
 @Setter
@@ -49,9 +54,12 @@ public class UsuarioEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UsuarioRol rol;
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<ReservasEntity> reservas;
+
         @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return  Collections.singleton(new SimpleGrantedAuthority(rol.name()));
+        return List.of(new SimpleGrantedAuthority(rol.name()));
     }
 
     @Override

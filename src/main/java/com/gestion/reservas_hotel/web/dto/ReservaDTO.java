@@ -16,7 +16,8 @@ public class ReservaDTO {
     private Integer id;
     private Integer capacidadHotel;
     private Integer hotelId;
-
+    private String usuario;
+    
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date fechaInicio;
 

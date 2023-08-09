@@ -1,8 +1,5 @@
 package com.gestion.reservas_hotel.security.config;
 
-
-
-
 import com.gestion.reservas_hotel.service.interfaces.UsuarioService;
 import lombok.*;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +18,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.boot.autoconfigure.security.servlet.*;
 
 
 import java.util.Arrays;
@@ -42,10 +38,8 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/apiHoteles/v1/**").permitAll()
-                        .requestMatchers("/api/v1/signin/**").permitAll()
-                        .requestMatchers("/api/v1/generarTokenAdmin/**").permitAll()
+                        .requestMatchers("/apiReservas/v1/**").permitAll()
                         .requestMatchers("/apiHoteles/v1/crearHotel").hasRole("ADMIN")
-                        .requestMatchers("/apiHoteles/v1/listarHoteles/**").permitAll()
                          .anyRequest().authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider()).addFilterBefore(
